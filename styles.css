@@ -92,7 +92,7 @@ select, input[type="text"] {
     align-self: end;
     height: 55px;
     width: 55px;
-    margin-top: 60px;
+    margin-top: 10%px;
     margin-right: 0px;
     margin-bottom: 0px;
 }
