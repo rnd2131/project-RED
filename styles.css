@@ -92,9 +92,7 @@ select, input[type="text"] {
     align-self: end;
     height: 55px;
     width: 55px;
-    margin-top: 10%;
-    margin-right: 0px;
-    margin-bottom: 0px;
+    margin-top: -21%;
 }
 
 .submit-btn:hover {
@@ -167,6 +165,7 @@ select, input[type="text"] {
     padding-left: 30px; /* Space for the custom checkbox */
     cursor: pointer;
     font-size: 16px;
+    margin-top: 30%;
 }
 
 .custom-checkbox + label::before {
