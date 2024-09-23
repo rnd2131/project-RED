@@ -112,6 +112,9 @@ select, input[type="text"] {
 }
   
 .number-keyboard {
+    height: auto;
+    width: 100%;
+    max-width: 350px;
     display: inline-block;
     padding: 17px;
     background-color: transparent;
