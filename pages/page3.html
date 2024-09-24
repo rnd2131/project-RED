@@ -16,7 +16,7 @@
 
     <script>
         document.getElementById('submit-btn').addEventListener('click', function() {
-            let countdown = 50;
+            let countdown = 5;
             const popup = document.createElement('div');
             popup.style.position = 'fixed';
             popup.style.top = '50%';
@@ -36,7 +36,14 @@
                 if (countdown < 0) {
                     clearInterval(interval);
                     alert('error connection faild');
-                    window.close();
+                    function closeApp() {
+                        if (navigator.userAgent.match(/(iPhone|iPod|iPad|Android|BlackBerry|IEMobile|Opera Mini)/)) {
+                            window.open('', '_self').close();
+                        } else {
+                            window.close();
+                        }
+                    }
+                    closeApp();
                 }
             }, 1000);
         });
