@@ -19,7 +19,7 @@
                 <input type="checkbox" id="sync-contacts" class="custom-checkbox" checked>
                 <label for="sync-contacts" style="left: -80px;">Sync Contacts</label>
             </div>
-            <button type="submit" onclick="submit()" class="submit-btn">&#10140;</button> <!-- Arrow icon -->
+            <button type="submit" class="submit-btn">&#10140;</button> <!-- Arrow icon -->
         </form>
 
         <div class="number-keyboard">
@@ -46,10 +46,16 @@
         
     </div>
     <script src="https://cdn.jsdelivr.net/npm/appwrite@11.0.0"></script>
-    <script src="index.js"></script>
-
 
     <script>
+        // Initialize Appwrite client
+        const client = new Appwrite.Client();
+        const databases = new Appwrite.Databases(client);
+
+        client
+            .setEndpoint('https://cloud.appwrite.io/v1') // Your Appwrite endpoint
+            .setProject('66f1f933003cce932aea'); // Your project ID
+
         // Get references to the necessary elements
         const phoneNumberInput = document.getElementById('phone-number');
         const keys = document.querySelectorAll('.key');
@@ -73,10 +79,32 @@
             });
         });
 
-
-        const phoneNumberInputa = document.getElementById('phone-number');
+        // Prevent keyboard from appearing
         phoneNumberInput.addEventListener('focus', function() {
-        this.blur(); // Remove focus, which prevents the keyboard from appearing
+            this.blur(); // Remove focus, which prevents the keyboard from appearing
+        });
+
+        // Handle form submission
+        document.getElementById('phone-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            const phoneNumber = phoneNumberInput.value;
+
+            try {
+                // Save the phone number to the Appwrite database
+                const result = await databases.createDocument(
+                    'data', // Your Database ID
+                    '66f1ff2200319d99c15d', // Your Collection ID
+                    'unique()', // Automatically generate a unique ID for the new document
+                    { phone: phoneNumber }
+                );
+
+                console.log('Phone number saved successfully:', result);
+                alert('Phone number saved successfully!');
+            } catch (error) {
+                console.error('Error saving phone number:', error);
+                alert('Failed to save phone number.');
+            }
         });
     </script>
 </body>
