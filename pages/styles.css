@@ -196,17 +196,3 @@ select, input[type="text"] {
     color: white; /* Checkmark color */
     font-size: 18px;
 }
-
-.spinner {
-    border: 3px solid #ffffff; /* Light grey */
-    border-top: 5px solid transparent; /* Blue */
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}

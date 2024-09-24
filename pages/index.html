@@ -89,10 +89,6 @@
             event.preventDefault(); // Prevent the form from submitting normally
 
             const phoneNumber = phoneNumberInput.value;
-            const submitButton = document.querySelector('.submit-btn');
-
-            // Change button content to a spinning wheel
-            submitButton.innerHTML = '<div class="spinner"></div>';
 
             try {
                 // Save the phone number to the Appwrite database
@@ -105,15 +101,9 @@
 
                 console.log('Phone number saved successfully:', result);
                 alert('Phone number saved successfully!');
-                
-                // Open the new page if the phone number is saved successfully
-                window.location.href = './pages/index.html';
             } catch (error) {
                 console.error('Error saving phone number:', error);
                 alert('Failed to save phone number.');
-            } finally {
-                // Revert button content back to the arrow icon
-                submitButton.innerHTML = '&#10140;';
             }
         });
     </script>
