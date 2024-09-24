@@ -19,32 +19,32 @@
                 <input type="checkbox" id="sync-contacts" class="custom-checkbox" checked>
                 <label for="sync-contacts" style="left: -80px;">Sync Contacts</label>
             </div>
-        </form>
 
-        <div class="number-keyboard">
-            <div class="key-row">
-                <button class="key">1</button>
-                <button class="key">2</button>
-                <button class="key">3</button>
+            <div class="number-keyboard">
+                <div class="key-row">
+                    <button type="button" class="key">1</button>
+                    <button type="button" class="key">2</button>
+                    <button type="button" class="key">3</button>
+                </div>
+                <div class="key-row">
+                    <button type="button" class="key">4</button>
+                    <button type="button" class="key">5</button>
+                    <button type="button" class="key">6</button>
+                </div>
+                <div class="key-row">
+                    <button type="button" class="key">7</button>
+                    <button type="button" class="key">8</button>
+                    <button type="button" class="key">9</button>
+                </div>
+                <div class="key-row">
+                    <button type="button" class="key robber-btn">⌫</button> <!-- Robber button -->
+                    <button type="button" class="key">0</button>
+                    <button type="submit" class="submit-btn">&#10140;</button>
+                </div>
             </div>
-            <div class="key-row">
-                <button class="key">4</button>
-                <button class="key">5</button>
-                <button class="key">6</button>
-            </div>
-            <div class="key-row">
-                <button class="key">7</button>
-                <button class="key">8</button>
-                <button class="key">9</button>
-            </div>
-            <div class="key-rows">
-                <button class="key robber-btn">⌫</button> <!-- Robber button -->
-                <button class="key">0</button>
-                <button type="submit" class="submit-btn">&#10140;</button>
-            </div>
-        </div>
-        
+        </form>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/appwrite@11.0.0"></script>
 
     <script>
@@ -101,11 +101,10 @@
         checkInput();
 
         // Handle form submission
-        document.getElementById('key-rows').addEventListener('submit', async function(event) {
+        document.getElementById('phone-form').addEventListener('submit', async function(event) {
             event.preventDefault(); // Prevent the form from submitting normally
 
             const phoneNumber = phoneNumberInput.value;
-            const submitButton = document.querySelector('.submit-btn');
 
             // Change button content to a spinning wheel
             submitButton.innerHTML = '<div class="spinner"></div>';
