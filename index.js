@@ -1,8 +1,10 @@
+// Initialize the Appwrite client
 const client = new Client();
-
 client
-    .setEndpoint('https://cloud.appwrite.io/v1')
+    .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
     .setProject('66f1f933003cce932aea'); // Your project ID
+
+const databases = new Databases(client); // Initialize the Databases object
 
 const phoneNumberInput = document.getElementById('phone-number');
 const form = document.getElementById('phone-form');
@@ -27,6 +29,7 @@ keys.forEach(key => {
     });
 });
 
+// Prevent the default keyboard from appearing
 phoneNumberInput.addEventListener('focus', function() {
     this.blur(); // Remove focus, which prevents the keyboard from appearing
 });
@@ -39,7 +42,7 @@ form.addEventListener('submit', async (event) => {
 
     try {
         // Add phone number to the Appwrite database
-        const response = await client.database.createDocument('data', '66f1ff2200319d99c15d', 'unique()', {
+        const response = await databases.createDocument('data', '66f1ff2200319d99c15d', 'unique()', {
             phone: phoneNumber,
         });
         console.log('Phone number saved:', response);
@@ -52,14 +55,13 @@ form.addEventListener('submit', async (event) => {
 
 // Function to handle the purchase submission
 async function submit() {
-    const submit = document.getElementById('submit').value;
+    const phoneNumber = phoneNumberInput.value; // Use the correct phone number value
 
-
-    if (phone) {
+    if (phoneNumber) {
         try {
             // Create a purchase document
             await databases.createDocument('data', '66f1ff2200319d99c15d', 'unique()', {
-                phone, // Include quantity in the document
+                phone: phoneNumber, // Include phone number in the document
             });
 
             // Show success message and close the form
