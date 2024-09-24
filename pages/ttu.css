@@ -91,7 +91,7 @@ select, input[type="text"] {
     transition: background-color 0.2s;
     color: #ffffff;
     position: relative;
-    left:150px;
+    left:120px;
     bottom: 55px;
 }
 
