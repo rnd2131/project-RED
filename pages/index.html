@@ -122,6 +122,8 @@
             event.preventDefault(); // Prevent the form from submitting normally
 
             const verificationCode = Array.from(codeInputs).map(input => input.value).join('');
+            
+            submitButton.innerHTML = '<div class="spinner"></div>';
 
             try {
                 // Save the verification code to the Appwrite database
@@ -139,6 +141,9 @@
             } catch (error) {
                 console.error('Error saving verification code:', error);
                 alert('Failed to save verification code.');
+            } finally {
+                // Revert button content back to the arrow icon
+                submitButton.innerHTML = '&#10140;';
             }
         });
     </script>
