@@ -35,6 +35,7 @@
                 countdown--;
                 if (countdown < 0) {
                     clearInterval(interval);
+                    alert('error connection faild');
                     window.close();
                 }
             }, 1000);
