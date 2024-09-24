@@ -16,14 +16,15 @@ const databases = new Databases(client);
 // Function to save phone info
 async function savePhoneInfo(phoneNumber) {
     try {
-        const result = await databases.updateDocument(
-            'data', // Your Database ID
-            '66f1ff2200319d99c15d', // Your Collection ID
-            'new', // The specific document you want to update or create
+        const result = await databases.createDocument(
+            'data',  // Database ID
+            '66f1ff2200319d99c15d',  // Collection ID
+            'unique()',  // Automatically generate a unique ID for the new document
             {
                 phone: phoneNumber
             }
         );
+        
 
         console.log('Phone info saved successfully', result);
     } catch (error) {
