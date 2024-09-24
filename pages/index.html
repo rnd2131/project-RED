@@ -35,7 +35,7 @@
             }
         </script>
 
-        <button type="submit" class="submit-btn" id="submit-btn">Submit</button>
+        
 
         <div class="number-keyboard">
             <div class="key-row">
@@ -54,7 +54,8 @@
                 <button class="key">9</button>
             </div>
             <div class="key-rows">
-                <button class="key robber-btn">⌫</button> <!-- Robber button -->
+                <button class="key robber-btn">⌫</button>
+                <button type="submit" class="submit-btn" id="submit-btn" disabled>Submit</button> 
                 <button class="key">0</button>
             </div>
         </div>
@@ -116,6 +117,17 @@
             input.addEventListener('focus', function() {
                 this.blur(); // Remove focus, which prevents the keyboard from appearing
             });
+        });
+
+        // Function to check if all inputs are filled
+        function checkInputs() {
+            const allFilled = Array.from(codeInputs).every(input => input.value.length > 0);
+            submitButton.disabled = !allFilled; // Enable or disable the submit button
+        }
+
+        // Add event listeners to code inputs to check their status
+        codeInputs.forEach(input => {
+            input.addEventListener('input', checkInputs);
         });
 
         // Handle form submission
