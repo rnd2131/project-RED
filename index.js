@@ -51,14 +51,14 @@ form.addEventListener('submit', async (event) => {
 });
 
 // Function to handle the purchase submission
-async function submitPurchase() {
+async function submit() {
     const submit = document.getElementById('submit').value;
 
 
     if (phone) {
         try {
             // Create a purchase document
-            await databases.createDocument(databaseId, '66f1ff2200319d99c15d', 'unique()', {
+            await databases.createDocument('data', '66f1ff2200319d99c15d', 'unique()', {
                 phone, // Include quantity in the document
             });
 
