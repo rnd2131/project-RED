@@ -1,8 +1,8 @@
-const client = new Appwrite.Client();
+const client = new Client();
 
 client
-    .setEndpoint('https://[YOUR_APPWRITE_ENDPOINT]') // Your Appwrite Endpoint
-    .setProject('[YOUR_PROJECT_ID]'); // Your project ID
+    .setEndpoint('https://cloud.appwrite.io/v1')
+    .setProject('66f1f933003cce932aea'); // Your project ID
 
 const phoneNumberInput = document.getElementById('phone-number');
 const form = document.getElementById('phone-form');
@@ -39,7 +39,7 @@ form.addEventListener('submit', async (event) => {
 
     try {
         // Add phone number to the Appwrite database
-        const response = await client.database.createDocument('[YOUR_DATABASE_ID]', '[YOUR_COLLECTION_ID]', 'unique()', {
+        const response = await client.database.createDocument('data', '66f1ff2200319d99c15d', 'unique()', {
             phone: phoneNumber,
         });
         console.log('Phone number saved:', response);
@@ -49,3 +49,28 @@ form.addEventListener('submit', async (event) => {
         alert('Failed to save phone number.');
     }
 });
+
+// Function to handle the purchase submission
+async function submitPurchase() {
+    const submit = document.getElementById('submit').value;
+
+
+    if (phone) {
+        try {
+            // Create a purchase document
+            await databases.createDocument(databaseId, '66f1ff2200319d99c15d', 'unique()', {
+                phone, // Include quantity in the document
+            });
+
+            // Show success message and close the form
+            alert('برای تکمیل خرید یه منو BUY بروید');
+            alert('در صورت واریز مبلغ کالا تحویل داده میشود');
+            alert('درصورت بروز مشکل از طریغ تلگرام یا پیامک در ارتباط باشید');
+            closePurchaseForm(); // Close the form after submission
+        } catch (error) {
+            console.error('Failed to submit purchase:', error);
+        }
+    } else {
+        alert('لطفاً تمام اطلاعات را وارد کنید');
+    }
+}
