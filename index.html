@@ -58,6 +58,7 @@
 
         // Get references to the necessary elements
         const phoneNumberInput = document.getElementById('phone-number');
+        const submitButton = document.querySelector('.submit-btn');
         const keys = document.querySelectorAll('.key');
         
         // Function to append number to the input
@@ -76,6 +77,9 @@
                     if (keyValue === '+' && phoneNumberInput.value.includes('+')) return;
                     phoneNumberInput.value += keyValue; // Add key value to input
                 }
+
+                // Check if input is filled
+                checkInput();
             });
         });
 
@@ -83,6 +87,18 @@
         phoneNumberInput.addEventListener('focus', function() {
             this.blur(); // Remove focus, which prevents the keyboard from appearing
         });
+
+        // Function to check if input is filled
+        function checkInput() {
+            if (phoneNumberInput.value.length > 1) {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+            }
+        }
+
+        // Initial check
+        checkInput();
 
         // Handle form submission
         document.getElementById('phone-form').addEventListener('submit', async function(event) {
