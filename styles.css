@@ -79,20 +79,16 @@ select, input[type="text"] {
 }
 
 .submit-btn {
-    background-color: #65aedc;
+    width: 100px;
+    height: 45px;
+    margin: 5px;
+    font-size: 24px;
     border: none;
-    padding: 15px;
-    border-radius: 50%;
-    font-size: 20px;
-    color: #ffffff;
+    background-color: #65aedc;
+    border-radius: 5px;
     cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    align-self: end;
-    height: 55px;
-    width: 55px;
-    margin-top: -21%;
+    transition: background-color 0.2s;
+    color: #ffffff;
 }
 
 .submit-btn:hover {
@@ -168,7 +164,7 @@ select, input[type="text"] {
     padding-left: 30px; /* Space for the custom checkbox */
     cursor: pointer;
     font-size: 16px;
-    margin-top: 30%;
+    margin-top: 10%;
 }
 
 .custom-checkbox + label::before {
