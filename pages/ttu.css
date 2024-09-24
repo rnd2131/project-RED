@@ -206,7 +206,7 @@ select, input[type="text"] {
     animation: spin 1s linear infinite;
     transform: translate(-50%, -50%); /* Adjust for perfect centering */
     position: relative;
-    left: 50px;
+    left: 30px;
     top: 10px;
 }
 
