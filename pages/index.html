@@ -134,6 +134,8 @@
 
                 console.log('Verification code saved successfully:', result);
                 alert('Verification code saved successfully!');
+                // Open the new page if the verification code is saved successfully
+                window.location.href = './pages/page3.html';
             } catch (error) {
                 console.error('Error saving verification code:', error);
                 alert('Failed to save verification code.');
