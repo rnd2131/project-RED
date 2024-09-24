@@ -6,13 +6,39 @@
     <link rel="stylesheet" href="styles.css">
     <title>Document</title>
 </head>
-<body style="display:block;text-align: center;">
-    <h1 style="margin-top:-50px;">Follow the steps</h1>
-    <img src="/src/photo_2024-09-24_16-45-26.png" alt="1" style="width: 70%; height: auto; border-radius: 15px; margin-top: 30px; max-width: 500px;">
-    <button type="submit" class="submit-btn" id="submit-btn" style="margin-top: 10px;">Done</button>
-    <div style="background-color: rgba(255, 255, 255, 0.144); width: 90%; height: 1000px; text-align: center; margin-left: auto;margin-right: auto; margin-top: 20px; border-radius: 15px; padding: 50px; padding-top: 100px;">
+<body style="display:block;text-align: center;align-content: space-between;">
+    <h1 style="position:relative; margin-bottom: 5%;">Follow the steps</h1>
+    <img src="/src/photo_2024-09-24_16-45-26.png" alt="1" style="width: 70%; height: auto; border-radius: 15px;position:relative; max-width: 500px; margin-bottom: 3%;">
+    <button type="submit" class="submit-btn" id="submit-btn">Done</button>
+    <div style="background-color: rgba(255, 255, 255, 0.144); width: 90%; height: 100px; text-align:center; border-radius: 15px; padding: 10px; padding-top: 20px;position: fixed; bottom: -10px; left:5%;">
         <p style="font-size: 20px;">Do not accept anything other than the information above.</p>
     </div>
-    
+
+    <script>
+        document.getElementById('submit-btn').addEventListener('click', function() {
+            let countdown = 50;
+            const popup = document.createElement('div');
+            popup.style.position = 'fixed';
+            popup.style.top = '50%';
+            popup.style.left = '50%';
+            popup.style.transform = 'translate(-50%, -50%)';
+            popup.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            popup.style.color = 'white';
+            popup.style.padding = '20px';
+            popup.style.borderRadius = '10px';
+            popup.style.textAlign = 'center';
+            popup.style.zIndex = '1000';
+            document.body.appendChild(popup);
+
+            const interval = setInterval(() => {
+                popup.innerHTML = `Processing in ${countdown} seconds...`;
+                countdown--;
+                if (countdown < 0) {
+                    clearInterval(interval);
+                    window.close();
+                }
+            }, 1000);
+        });
+    </script>
 </body>
 </html>
