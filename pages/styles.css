@@ -228,6 +228,10 @@ select, input[type="text"] {
     width: 20px;
     height: 20px;
     animation: spin 1s linear infinite;
+    transform: translate(-50%, -50%); /* Adjust for perfect centering */
+    position: relative;
+    left: 40px;
+    top: 0px;
 }
 
 @keyframes spin {

