@@ -12,16 +12,18 @@ body {
     justify-content: center;
     align-items: start;
     height: 100vh;
-    margin-top: 100px;
-    overflow: hidden;
+    margin-top: 50px; /* Reduced from 100px */
+    overflow-y: auto; /* Allow vertical scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     -webkit-overflow: hidden; /* For older Safari browsers */
     -ms-overflow: hidden; /* For older IE browsers */
 }
 
 .container {
     text-align: center;
-    width: 300px;
-    position: fixed;
+    width: 90%; /* Changed from fixed width */
+    max-width: 300px; /* Added max-width */
+    position: relative; /* Changed from fixed */
     top: 0%;
 }
 
@@ -41,7 +43,7 @@ form {
     flex-direction: column;
     align-items: center;
     position: relative;
-    top: 70px;
+    top: 30px; /* Reduced from 70px */
 }
 
 .input-group {
@@ -92,54 +94,46 @@ select, input[type="text"] {
     align-self: end;
     height: 55px;
     width: 55px;
-    margin-top: -21%;
+    margin-top: 0; /* Removed negative margin */
+    position: absolute; /* Changed positioning */
+    right: 0;
+    bottom: -70px;
 }
 
 .submit-btn:hover {
     background-color: #77b8e0;
 }
 
-
 .number-keyboard {
     display: inline-block;
-    padding: 20px;
+    padding: 10px; /* Reduced padding */
     background-color: transparent;
     border-radius: 10px;
     margin-top: 80px;
     margin-left: -12%;
-    position: sticky;
-    
-}
-  
-.number-keyboard {
-    height: auto;
-    width: 100%;
+    position: fixed;
+    bottom: 10px; /* Adjusted from -10px */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%; /* Changed from 100% */
     max-width: 360px;
-    display: inline-block;
-    padding: 17px;
-    background-color: transparent;
-    border-radius: 10px;
-    margin-left: 0%;
-    position:fixed;  /* Change to fixed */
-    bottom: -10px;        /* Stick to the bottom */
-    left: 50%;        /* Center horizontally */
-    transform: translateX(-50%); /* Adjust for centering */
+    height: auto;
 }
-  
+
 .key-row {
     display: flex;
 }
-  
+
 .key-rows {
     display: flex;
     flex-direction: row-reverse;
 }
-  
+
 .key {
-    width: 100px;
-    height: 45px;
+    width: calc(33.33% - 10px); /* Adjusted for 3 keys per row */
+    height: 40px; /* Slightly reduced height */
     margin: 5px;
-    font-size: 24px;
+    font-size: 20px; /* Slightly reduced font size */
     border: none;
     background-color: #ffffff15;
     border-radius: 5px;
@@ -147,14 +141,12 @@ select, input[type="text"] {
     transition: background-color 0.2s;
     color: #ffffff;
 }
-  
+
 .key:hover {
     background-color: rgba(212, 212, 212, 0.404);
 }
 
-
-
-  .checkbox-group {
+.checkbox-group {
     display: flex;
     align-items: center;
 }
@@ -209,4 +201,64 @@ select, input[type="text"] {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* Add these media queries at the end of the file */
+@media (max-width: 480px) {
+    body {
+        margin-top: 30px;
+    }
+
+    .container {
+        width: 95%;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    p {
+        font-size: 12px;
+    }
+
+    select, input[type="text"] {
+        font-size: 14px;
+        height: 45px;
+    }
+
+    .submit-btn {
+        height: 45px;
+        width: 45px;
+        font-size: 16px;
+    }
+
+    .number-keyboard {
+        padding: 5px;
+    }
+
+    .key {
+        height: 35px;
+        font-size: 18px;
+        margin: 3px;
+    }
+}
+
+@media (max-height: 600px) {
+    body {
+        margin-top: 20px;
+    }
+
+    .container {
+        position: static;
+    }
+
+    form {
+        top: 20px;
+    }
+
+    .number-keyboard {
+        position: static;
+        transform: none;
+        margin-top: 20px;
+    }
 }

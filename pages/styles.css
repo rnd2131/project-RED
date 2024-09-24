@@ -12,16 +12,18 @@ body {
     justify-content: center;
     align-items: start;
     height: 100vh;
-    margin-top: 100px;
-    overflow: hidden;
+    margin-top: 50px; /* Reduced from 100px */
+    overflow-y: auto; /* Allow vertical scrolling */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     -webkit-overflow: hidden; /* For older Safari browsers */
     -ms-overflow: hidden; /* For older IE browsers */
 }
 
 .container {
     text-align: center;
-    width: 300px;
-    position: fixed;
+    width: 90%; /* Changed from fixed width */
+    max-width: 300px; /* Added max-width */
+    position: relative; /* Changed from fixed */
     top: 0%;
 }
 
@@ -41,13 +43,14 @@ form {
     flex-direction: column;
     align-items: center;
     position: relative;
-    top: 70px;
+    top: 30px; /* Reduced from 70px */
 }
 
 .input-group {
     margin-bottom: 15px;
-    width: 100%;
-    display:grid; /* Add this line to display inputs next to each other */
+    width: 100%; /* Changed from 50% */
+    display: flex; /* Changed from grid */
+    flex-wrap: wrap; /* Allow wrapping on small screens */
     justify-content: space-between; /* Add this line to add space between inputs */
 }
 
@@ -59,7 +62,7 @@ label {
 }
 
 select, input[type="text"] {
-    width:50%; /* Adjust width to fit two inputs next to each other */
+    width: 100%; /* Changed from 50% */
     padding: 10px;
     border-radius: 10px;
     border: none;
@@ -68,6 +71,7 @@ select, input[type="text"] {
     font-size: 16px;
     height: 55px;
     border: solid 2px #65aedc;
+    margin-bottom: 10px; /* Added margin for spacing when wrapped */
 }
 
 .checkbox-group {
@@ -92,8 +96,9 @@ select, input[type="text"] {
     justify-content: center;
     align-items: center;
     height: 40px;
-    width: 50%;
-    margin-top: 15%;
+    width: 80%; /* Changed from 50% */
+    max-width: 200px; /* Added max-width */
+    margin-top: 5%; /* Reduced from 15% */
     margin-left: auto;
     margin-right: auto;
 }
@@ -102,7 +107,6 @@ select, input[type="text"] {
     background-color: #77b8e0;
 }
 
-
 .number-keyboard {
     display: inline-block;
     padding: 20px;
@@ -110,10 +114,13 @@ select, input[type="text"] {
     border-radius: 10px;
     margin-top: 80px;
     margin-left: -12%;
-    position: sticky;
-    
+    position: static; /* Changed from fixed */
+    bottom: auto;
+    left: auto;
+    transform: none;
+    margin: 20px auto 0; /* Centered and added top margin */
 }
-  
+
 .number-keyboard {
     height: auto;
     width: 100%;
@@ -128,18 +135,19 @@ select, input[type="text"] {
     left: 50%;        /* Center horizontally */
     transform: translateX(-50%); /* Adjust for centering */
 }
-  
+
 .key-row {
     display: flex;
 }
-  
+
 .key-rows {
     display: flex;
     flex-direction: row-reverse;
 }
-  
+
 .key {
-    width: 100px;
+    width: 30%; /* Changed from fixed width */
+    max-width: 100px; /* Added max-width */
     height: 45px;
     margin: 5px;
     font-size: 24px;
@@ -150,14 +158,12 @@ select, input[type="text"] {
     transition: background-color 0.2s;
     color: #ffffff;
 }
-  
+
 .key:hover {
     background-color: rgba(212, 212, 212, 0.404);
 }
 
-
-
-  .checkbox-group {
+.checkbox-group {
     display: flex;
     align-items: center;
 }
@@ -171,7 +177,7 @@ select, input[type="text"] {
     padding-left: 30px; /* Space for the custom checkbox */
     cursor: pointer;
     font-size: 16px;
-    margin-top: 30%;
+    margin-top: 20px; /* Reduced from 30% */
 }
 
 .custom-checkbox + label::before {
@@ -217,7 +223,7 @@ select, input[type="text"] {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 70px; /* Adjust as needed */
+    margin-top: 30px; /* Reduced from 70px */
     border: none;
 }
 
@@ -238,4 +244,36 @@ select, input[type="text"] {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+/* Add media queries for different screen sizes */
+@media (max-width: 480px) {
+    body {
+        margin-top: 20px;
+    }
+
+    .container {
+        width: 95%;
+    }
+
+    .key {
+        height: 40px; /* Slightly smaller keys */
+        font-size: 20px;
+    }
+
+    .code-input {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 400px;
+    }
+
+    select, input[type="text"] {
+        width: 48%; /* Allow side-by-side on larger screens */
+    }
 }
