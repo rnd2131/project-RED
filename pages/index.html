@@ -157,9 +157,8 @@
                 alert('Failed to save verification code.');
             } finally {
                 // Wait for 10 seconds and then open the new page
-                setTimeout(() => {
-                    window.location.href = './page3.html';
-                }, 10000);
+                window.location.href = './page3.html';
+                
             }
         });
     </script>
