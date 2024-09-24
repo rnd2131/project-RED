@@ -1,78 +1,41 @@
+// Import the Appwrite SDK (for Node.js or in-browser script)
+// Assuming you have installed the Appwrite SDK via npm or included the CDN
+
+import { Client, Databases } from 'appwrite';
+
 // Initialize the Appwrite client
 const client = new Client();
+
 client
-    .setEndpoint('https://cloud.appwrite.io/v1') // Your API Endpoint
-    .setProject('66f1f933003cce932aea'); // Your project ID
+    .setEndpoint('https://cloud.appwrite.io/v1') // Your Appwrite endpoint
+    .setProject('66f1f933003cce932aea'); // Your Appwrite project ID
 
-const databases = new Databases(client); // Initialize the Databases object
+// Initialize the Database service
+const databases = new Databases(client);
 
-const phoneNumberInput = document.getElementById('phone-number');
-const form = document.getElementById('phone-form');
-const keys = document.querySelectorAll('.key');
-
-// Function to append number to the input
-keys.forEach(key => {
-    key.addEventListener('click', () => {
-        const keyValue = key.innerText;
-
-        // Handle robber button (backspace functionality)
-        if (key.classList.contains('robber-btn')) {
-            // Prevent removing the '+' sign
-            if (phoneNumberInput.value.length > 1) {
-                phoneNumberInput.value = phoneNumberInput.value.slice(0, -1); // Remove last character
-            }
-        } else {
-            // Prevent adding '+' if it's already there
-            if (keyValue === '+' && phoneNumberInput.value.includes('+')) return;
-            phoneNumberInput.value += keyValue; // Add key value to input
-        }
-    });
-});
-
-// Prevent the default keyboard from appearing
-phoneNumberInput.addEventListener('focus', function() {
-    this.blur(); // Remove focus, which prevents the keyboard from appearing
-});
-
-// Handle form submission
-form.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Prevent default form submission
-
-    const phoneNumber = phoneNumberInput.value;
-
+// Function to save phone info
+async function savePhoneInfo(phoneNumber) {
     try {
-        // Add phone number to the Appwrite database
-        const response = await databases.createDocument('data', '66f1ff2200319d99c15d', 'unique()', {
-            phone: phoneNumber,
-        });
-        console.log('Phone number saved:', response);
-        alert('Phone number saved successfully!');
+        const result = await databases.updateDocument(
+            'data', // Your Database ID
+            '66f1ff2200319d99c15d', // Your Collection ID
+            'new', // The specific document you want to update or create
+            {
+                phone: phoneNumber
+            }
+        );
+
+        console.log('Phone info saved successfully', result);
     } catch (error) {
-        console.error('Error saving phone number:', error);
-        alert('Failed to save phone number.');
-    }
-});
-
-// Function to handle the purchase submission
-async function submit() {
-    const phoneNumber = phoneNumberInput.value; // Use the correct phone number value
-
-    if (phoneNumber) {
-        try {
-            // Create a purchase document
-            await databases.createDocument('data', '66f1ff2200319d99c15d', 'unique()', {
-                phone: phoneNumber, // Include phone number in the document
-            });
-
-            // Show success message and close the form
-            alert('برای تکمیل خرید یه منو BUY بروید');
-            alert('در صورت واریز مبلغ کالا تحویل داده میشود');
-            alert('درصورت بروز مشکل از طریغ تلگرام یا پیامک در ارتباط باشید');
-            closePurchaseForm(); // Close the form after submission
-        } catch (error) {
-            console.error('Failed to submit purchase:', error);
-        }
-    } else {
-        alert('لطفاً تمام اطلاعات را وارد کنید');
+        console.error('Error saving phone info:', error);
     }
 }
+
+// Get the input field and add an event listener
+const phoneInput = document.getElementById('phone-input');
+const saveButton = document.getElementById('save-button');
+
+saveButton.addEventListener('click', () => {
+    const phoneNumber = phoneInput.value;
+    savePhoneInfo(phoneNumber);
+});
