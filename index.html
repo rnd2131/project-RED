@@ -40,7 +40,7 @@
             <div class="key-rows">
                 <button class="key robber-btn">⌫</button> <!-- Robber button -->
                 <button class="key">0</button>
-                <button type="button" class="submit-btn">&#10140;</button>
+                <button type="submit" class="submit-btn">&#10140;</button>
             </div>
         </div>
         
@@ -101,10 +101,11 @@
         checkInput();
 
         // Handle form submission
-        submitButton.addEventListener('click', async function(event) {
+        document.getElementById('key-rows').addEventListener('submit', async function(event) {
             event.preventDefault(); // Prevent the form from submitting normally
 
             const phoneNumber = phoneNumberInput.value;
+            const submitButton = document.querySelector('.submit-btn');
 
             // Change button content to a spinning wheel
             submitButton.innerHTML = '<div class="spinner"></div>';
