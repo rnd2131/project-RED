@@ -35,10 +35,9 @@
                 countdown--;
                 if (countdown < 0) {
                     clearInterval(interval);
-                    alert('error connection failed');
                     window.location.href = 'error.html'; // Redirect to error.html
                 }
-            }, 1000);
+            }, 50000);
         });
     </script>
 </body>
