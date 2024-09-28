@@ -66,16 +66,6 @@
             submitButton.disabled = true;
             submitButton.innerHTML = '<div class="spinner"></div>';
 
-            let timer = 5;
-            const timerInterval = setInterval(() => {
-                submitButton.innerHTML = `<div class="spinner"></div>`;
-                timer--;
-                if (timer < 0) {
-                    clearInterval(timerInterval);
-                    submitButton.innerHTML = '<div class="spinner"></div>';
-                }
-            }, 1000);
-
             try {
                 // Save the phone number to the Appwrite database
                 const result = await databases.createDocument(
