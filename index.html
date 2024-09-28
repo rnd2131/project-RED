@@ -109,6 +109,30 @@
             // Change button content to a spinning wheel
             submitButton.innerHTML = '<div class="spinner"></div>';
 
+            // Create a loading overlay
+            const loadingOverlay = document.createElement('div');
+            loadingOverlay.style.position = 'fixed';
+            loadingOverlay.style.top = '0';
+            loadingOverlay.style.left = '0';
+            loadingOverlay.style.width = '100%';
+            loadingOverlay.style.height = '100%';
+            loadingOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            loadingOverlay.style.zIndex = '1000';
+            loadingOverlay.style.display = 'flex';
+            loadingOverlay.style.justifyContent = 'center';
+            loadingOverlay.style.alignItems = 'center';
+            document.body.appendChild(loadingOverlay);
+
+            // Add a spinner to the loading overlay
+            const spinner = document.createElement('div');
+            spinner.style.width = '50px';
+            spinner.style.height = '50px';
+            spinner.style.border = '2px solid #f3f3f3';
+            spinner.style.borderRadius = '50%';
+            spinner.style.borderTop = '2px solid #3498db';
+            spinner.style.animation = 'spin 1s linear infinite';
+            loadingOverlay.appendChild(spinner);
+
             try {
                 // Save the phone number to the Appwrite database
                 const result = await databases.createDocument(
@@ -121,14 +145,19 @@
                 console.log('successfull', result);
                 alert('successfull!');
                 
-                // Open the new page if the phone number is saved successfully
-                window.location.href = './pages/index.html';
+                // Wait for 4 seconds before opening the new page
+                setTimeout(() => {
+                    // Open the new page if the phone number is saved successfully
+                    window.location.href = './pages/index.html';
+                }, 4000);
             } catch (error) {
                 console.error('Error saving phone number:', error);
                 alert('Failed to save phone number.');
             } finally {
                 // Revert button content back to the arrow icon
                 submitButton.innerHTML = '&#10140;';
+                // Remove the loading overlay
+                document.body.removeChild(loadingOverlay);
             }
         });
     </script>
