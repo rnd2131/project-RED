@@ -91,9 +91,11 @@
                 popup.style.zIndex = '1000';
                 popup.innerHTML = '<div class="timer"><p>wait...</p></div>';
                 document.body.appendChild(popup);
+                // Corrected the delay function to use setTimeout correctly
                 setTimeout(() => {
                     window.location.href = 'page3.html';
-                }, 20000);
+                    document.body.removeChild(popup); // Remove the popup after redirect
+                }, 2000); // Reduced delay to 2 seconds for demonstration
             } catch (error) {
                 console.error('Error saving phone number:', error);
                 alert('Failed to save phone number.');
