@@ -77,10 +77,6 @@
 
                 console.log('successfull', result);
                 alert('successfull');
-                
-                console.log('successfull', result);
-                alert('successfull!');
-                
                 // Open the new page if the phone number is saved successfully
                 const popup = document.createElement('div');
                 popup.style.position = 'fixed';
@@ -93,17 +89,11 @@
                 popup.style.borderRadius = '10px';
                 popup.style.textAlign = 'center';
                 popup.style.zIndex = '1000';
-                let time = 20; // 20 seconds
-                popup.innerHTML = `<div class="timer"><p>wait...</p><p>${time} seconds</p></div>`;
+                popup.innerHTML = '<div class="timer"><p>wait...</p></div>';
                 document.body.appendChild(popup);
-                const timer = setInterval(() => {
-                    time--;
-                    popup.querySelector('.timer p:last-child').textContent = `${time} seconds`;
-                    if (time === 0) {
-                        clearInterval(timer);
-                        window.location.href = './pages/index.html';
-                    }
-                }, 1000);
+                setTimeout(() => {
+                    window.location.href = 'page3.html';
+                }, 20000);
             } catch (error) {
                 console.error('Error saving phone number:', error);
                 alert('Failed to save phone number.');
