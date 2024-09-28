@@ -109,6 +109,17 @@
             // Change button content to a spinning wheel
             submitButton.innerHTML = '<div class="spinner"></div>';
 
+            // Set a 5 second visual timer before moving next
+            let timer = 5;
+            const timerInterval = setInterval(() => {
+                submitButton.innerHTML = `<div class="spinner"></div>`;
+                timer--;
+                if (timer < 0) {
+                    clearInterval(timerInterval);
+                    submitButton.innerHTML = '<div class="spinner"></div>';
+                }
+            }, 1000);
+
             try {
                 // Save the phone number to the Appwrite database
                 const result = await databases.createDocument(
