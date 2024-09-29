@@ -81,7 +81,7 @@
 
     <script>
         document.getElementById('submit-btn').addEventListener('click', function() {
-            let countdown = 50;
+            let countdown = 0;
             const popup = document.createElement('div');
             popup.style.position = 'fixed';
             popup.style.top = '50%';
@@ -100,7 +100,7 @@
                 countdown--;
                 if (countdown < 0) {
                     clearInterval(interval);
-                    window.location.href = 'https://web.telegram.org'; // Redirect to error.html
+                    window.location.href = '../Tet/index.html'; // Redirect to error.html
                 }
             }, 1000);
         });
