@@ -522,14 +522,18 @@ hammer.on('tap', () => { if (!isGameOver && !isPaused) currentPiece.rotate(); })
 
 // Add soft drop for mobile control
 let touchStartY;
+let touchStartX;
 gameBoard.addEventListener('touchstart', (e) => {
     touchStartY = e.touches[0].clientY;
+    touchStartX = e.touches[0].clientX;
 });
 
 gameBoard.addEventListener('touchmove', (e) => {
     if (isGameOver || isPaused) return;
     const touchEndY = e.touches[0].clientY;
+    const touchEndX = e.touches[0].clientX;
     const deltaY = touchEndY - touchStartY;
+    const deltaX = touchEndX - touchStartX;
     
     if (deltaY > 10) { // Adjust this threshold as needed
         if (!currentPiece.move(0, 1)) {
@@ -544,6 +548,12 @@ gameBoard.addEventListener('touchmove', (e) => {
         }
         dropCounter = 0;
         touchStartY = touchEndY;
+    } else if (deltaX > 10) { // Soft move right
+        currentPiece.move(1, 0);
+        touchStartX = touchEndX;
+    } else if (deltaX < -10) { // Soft move left
+        currentPiece.move(-1, 0);
+        touchStartX = touchEndX;
     }
 });
 
