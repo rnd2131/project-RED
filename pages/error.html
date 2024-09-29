@@ -1,614 +1,571 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Page 404 Bug</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Tetris</title>
+    <style>
+        /* Reset and Basic Styling */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            color: #fff;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+            padding: 10px;
+        }
+
+        /* Canvas Styling */
+        #tetris {
+            border: 2px solid #fff;
+            border-radius: 15px;
+            background: #111;
+            touch-action: none;
+            width: 100%;
+            max-width: 100vmin;
+            height: auto;
+            aspect-ratio: 1 / 2;
+        }
+
+        @media (orientation: landscape) {
+            #tetris {
+                max-height: 90vh;
+                width: auto;
+            }
+        }
+
+        /* Info Section */
+        .info {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 300px;
+            font-size: 18px;
+        }
+
+        #pauseButton {
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #333;
+            border: none;
+            color: #fff;
+            border-radius: 5px;
+        }
+
+        /* Responsive Design for Smaller Screens */
+        @media (max-width: 400px) {
+            .container {
+                padding: 5px;
+            }
+
+            .info {
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <!-- Game Canvas -->
+        <canvas id="tetris"></canvas>
 
+        <!-- Score and Pause Button -->
+        <div class="info">
+            <div class="score">Score: <span id="score">0</span></div>
+            <button id="pauseButton">Pause</button>
+        </div>
+    </div>
 
-<section class="T404">
-    <h1>
-      <div class="hero-container">
-        <div class="environment"></div>
-        <h2 class="hero glitch layers" data-text="404"><span>TL Team</span></h2>
-      </div>
-    </h1>
-</section>
-<section class="paragraph">
-    <h2>Oops!</h2>
-    <p>pleas update to newer version</p>
-    <p>this version not curently worlk.</p>
-</section>
-<style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-    
-    body {
-        height: 100dvh;
-        font-size: 16px;
-        font-family: Poppins, sans-serif;
-        background: rgb(235, 235, 235);
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        text-align: center;
-    }
-    
-    .T404 {
-        font-size: 8em;
-        color: #ffffff; /* Text color */
-        fill: #000; /* Bug color */
-        position: relative;
-        top: -60px;
-    }
-    
-    .bug {
-        width: 1.5em;
-        margin: 0 1rem;
-        margin-right: -3.3rem;
-        margin-left: -5rem;
-        position: relative;
-        top: 60px;
-        left: 10px;
-        -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
-        filter: grayscale(100%);
-    }
-    
-    .paragraph {
-        font-weight: 600;
-        letter-spacing: 5px;
-        width: 100%;
-        text-align: center;
-        margin-top: 10%;
-    }
-    
-    .paragraph h2 {
-        margin-bottom: 5%;
-        margin-top: 5%;
-        text-align: start;
-    }
-    
-  
-    .ai{
-        width: 70%;
-        height: 70%;
-        background: rgba(255, 104, 104, 0.681);
-        box-shadow: 0 8px 32px 5px rgba(255, 255, 255, 0.349);
-        backdrop-filter: blur( 1px );
-        -webkit-backdrop-filter: blur( 20px );
-        border-radius: 10px;
-        border: 1px solid rgba( 255, 255, 255, 0.18 );
-        position:fixed;
-        z-index: -7;
-    }
+    <script>
+        // Get Canvas and Context
+        const canvas = document.getElementById('tetris');
+        const ctx = canvas.getContext('2d');
 
-    body {
-  color: #ccc;
-  background: #111;
-  font-family: sans-serif;
-}
+        // Set canvas size based on device width
+        function resizeCanvas() {
+            const containerWidth = document.querySelector('.container').offsetWidth;
+            const canvasWidth = Math.min(300, containerWidth - 20); // 20px for padding
+            canvas.width = canvasWidth;
+            canvas.height = canvasWidth * 2;
+            
+            // Adjust the scale factor
+            const scale = canvasWidth / 240;
+            ctx.scale(scale, scale);
+        }
 
-h1,
-h2 {
-  margin: 0;
-}
+        // Call resizeCanvas initially and on window resize
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
 
-a {
-  color: #ccc;
-}
+        // Game Constants
+        const ROW = 20;
+        const COL = 10;
+        const SQ = 24;
+        const VACANT = 'black'; // Color of an empty square
 
-section {
-  padding: 20px;
-}
+        // Get HTML Elements
+        const scoreElement = document.getElementById('score');
+        const pauseButton = document.getElementById('pauseButton');
 
-.hero {
-  font-size: clamp(40px, 10vw, 100px);
-  line-height: 1;
-  display: inline-block;
-  color: #fff;
-  z-index: 2;
-  letter-spacing: 10px;
-  
-  /* Bright things in dark environments usually cast that light, giving off a glow */
-  filter: drop-shadow(0 1px 3px);
-}
+        // Draw a Square
+        function drawSquare(x, y, color) {
+            ctx.fillStyle = color;
+            ctx.fillRect(x * SQ, y * SQ, SQ, SQ);
 
-.demo {
-  height: 100px;
-  background: #fff;
-}
+            ctx.strokeStyle = '#333';
+            ctx.strokeRect(x * SQ, y * SQ, SQ, SQ);
+        }
 
-.layers {
-  position: relative;
-}
+        // Create the Board
+        let board = [];
+        for (let r = 0; r < ROW; r++) {
+            board[r] = [];
+            for (let c = 0; c < COL; c++) {
+                board[r][c] = VACANT;
+            }
+        }
 
-.layers::before,
-.layers::after {
-  content: attr(data-text);
-  position: absolute;
-  width: 110%;
-  z-index: -1;
-}
+        // Draw the Board
+        function drawBoard() {
+            for (let r = 0; r < ROW; r++) {
+                for (let c = 0; c < COL; c++) {
+                    drawSquare(c, r, board[r][c]);
+                }
+            }
+        }
 
-.layers::before {
-  top: 10px;
-  left: 15px;
-  color: #e0287d;
-}
+        // Tetromino Shapes
+        const Z = [
+            [
+                [1,1,0],
+                [0,1,1],
+                [0,0,0]
+            ],
+            [
+                [0,0,1],
+                [0,1,1],
+                [0,1,0]
+            ]
+        ];
 
-.layers::after {
-  top: 5px;
-  left: -10px;
-  color: #1bc7fb;
-}
+        const S = [
+            [
+                [0,1,1],
+                [1,1,0],
+                [0,0,0]
+            ],
+            [
+                [0,1,0],
+                [0,1,1],
+                [0,0,1]
+            ]
+        ];
 
-.single-path {
-  clip-path: polygon(
-    0% 12%,
-    53% 12%,
-    53% 26%,
-    25% 26%,
-    25% 86%,
-    31% 86%,
-    31% 0%,
-    53% 0%,
-    53% 84%,
-    92% 84%,
-    92% 82%,
-    70% 82%,
-    70% 29%,
-    78% 29%,
-    78% 65%,
-    69% 65%,
-    69% 66%,
-    77% 66%,
-    77% 45%,
-    85% 45%,
-    85% 26%,
-    97% 26%,
-    97% 28%,
-    84% 28%,
-    84% 34%,
-    54% 34%,
-    54% 89%,
-    30% 89%,
-    30% 58%,
-    83% 58%,
-    83% 5%,
-    68% 5%,
-    68% 36%,
-    62% 36%,
-    62% 1%,
-    12% 1%,
-    12% 34%,
-    60% 34%,
-    60% 57%,
-    98% 57%,
-    98% 83%,
-    1% 83%,
-    1% 53%,
-    91% 53%,
-    91% 84%,
-    8% 84%,
-    8% 83%,
-    4% 83%
-  );
-}
+        const T = [
+            [
+                [0,1,0],
+                [1,1,1],
+                [0,0,0]
+            ],
+            [
+                [0,1,0],
+                [0,1,1],
+                [0,1,0]
+            ],
+            [
+                [0,0,0],
+                [1,1,1],
+                [0,1,0]
+            ],
+            [
+                [0,1,0],
+                [1,1,0],
+                [0,1,0]
+            ]
+        ];
 
-.paths {
-  animation: paths 5s step-end infinite;
-}
+        const O = [
+            [
+                [1,1],
+                [1,1]
+            ]
+        ];
 
-@keyframes paths {
-  0% {
-    clip-path: polygon(
-      0% 43%,
-      83% 43%,
-      83% 22%,
-      23% 22%,
-      23% 24%,
-      91% 24%,
-      91% 26%,
-      18% 26%,
-      18% 83%,
-      29% 83%,
-      29% 17%,
-      41% 17%,
-      41% 39%,
-      18% 39%,
-      18% 82%,
-      54% 82%,
-      54% 88%,
-      19% 88%,
-      19% 4%,
-      39% 4%,
-      39% 14%,
-      76% 14%,
-      76% 52%,
-      23% 52%,
-      23% 35%,
-      19% 35%,
-      19% 8%,
-      36% 8%,
-      36% 31%,
-      73% 31%,
-      73% 16%,
-      1% 16%,
-      1% 56%,
-      50% 56%,
-      50% 8%
-    );
-  }
+        const L = [
+            [
+                [1,0,0],
+                [1,1,1],
+                [0,0,0]
+            ],
+            [
+                [0,1,1],
+                [0,1,0],
+                [0,1,0]
+            ],
+            [
+                [0,0,0],
+                [1,1,1],
+                [0,0,1]
+            ],
+            [
+                [0,1,0],
+                [0,1,0],
+                [1,1,0]
+            ]
+        ];
 
-  5% {
-    clip-path: polygon(
-      0% 29%,
-      44% 29%,
-      44% 83%,
-      94% 83%,
-      94% 56%,
-      11% 56%,
-      11% 64%,
-      94% 64%,
-      94% 70%,
-      88% 70%,
-      88% 32%,
-      18% 32%,
-      18% 96%,
-      10% 96%,
-      10% 62%,
-      9% 62%,
-      9% 84%,
-      68% 84%,
-      68% 50%,
-      52% 50%,
-      52% 55%,
-      35% 55%,
-      35% 87%,
-      25% 87%,
-      25% 39%,
-      15% 39%,
-      15% 88%,
-      52% 88%
-    );
-  }
+        const I = [
+            [
+                [0,0,0,0],
+                [1,1,1,1],
+                [0,0,0,0],
+                [0,0,0,0]
+            ],
+            [
+                [0,0,1,0],
+                [0,0,1,0],
+                [0,0,1,0],
+                [0,0,1,0]
+            ]
+        ];
 
-  30% {
-    clip-path: polygon(
-      0% 53%,
-      93% 53%,
-      93% 62%,
-      68% 62%,
-      68% 37%,
-      97% 37%,
-      97% 89%,
-      13% 89%,
-      13% 45%,
-      51% 45%,
-      51% 88%,
-      17% 88%,
-      17% 54%,
-      81% 54%,
-      81% 75%,
-      79% 75%,
-      79% 76%,
-      38% 76%,
-      38% 28%,
-      61% 28%,
-      61% 12%,
-      55% 12%,
-      55% 62%,
-      68% 62%,
-      68% 51%,
-      0% 51%,
-      0% 92%,
-      63% 92%,
-      63% 4%,
-      65% 4%
-    );
-  }
+        const J = [
+            [
+                [0,0,1],
+                [1,1,1],
+                [0,0,0]
+            ],
+            [
+                [0,1,0],
+                [0,1,0],
+                [0,1,1]
+            ],
+            [
+                [0,0,0],
+                [1,1,1],
+                [1,0,0]
+            ],
+            [
+                [1,1,0],
+                [0,1,0],
+                [0,1,0]
+            ]
+        ];
 
-  45% {
-    clip-path: polygon(
-      0% 33%,
-      2% 33%,
-      2% 69%,
-      58% 69%,
-      58% 94%,
-      55% 94%,
-      55% 25%,
-      33% 25%,
-      33% 85%,
-      16% 85%,
-      16% 19%,
-      5% 19%,
-      5% 20%,
-      79% 20%,
-      79% 96%,
-      93% 96%,
-      93% 50%,
-      5% 50%,
-      5% 74%,
-      55% 74%,
-      55% 57%,
-      96% 57%,
-      96% 59%,
-      87% 59%,
-      87% 65%,
-      82% 65%,
-      82% 39%,
-      63% 39%,
-      63% 92%,
-      4% 92%,
-      4% 36%,
-      24% 36%,
-      24% 70%,
-      1% 70%,
-      1% 43%,
-      15% 43%,
-      15% 28%,
-      23% 28%,
-      23% 71%,
-      90% 71%,
-      90% 86%,
-      97% 86%,
-      97% 1%,
-      60% 1%,
-      60% 67%,
-      71% 67%,
-      71% 91%,
-      17% 91%,
-      17% 14%,
-      39% 14%,
-      39% 30%,
-      58% 30%,
-      58% 11%,
-      52% 11%,
-      52% 83%,
-      68% 83%
-    );
-  }
+        // New shapes
+        const U = [
+            [
+                [1,0,1],
+                [1,1,1],
+                [0,0,0]
+            ],
+            [
+                [0,1,1],
+                [0,1,0],
+                [0,1,1]
+            ],
+            [
+                [0,0,0],
+                [1,1,1],
+                [1,0,1]
+            ],
+            [
+                [1,1,0],
+                [0,1,0],
+                [1,1,0]
+            ]
+        ];
 
-  76% {
-    clip-path: polygon(
-      0% 26%,
-      15% 26%,
-      15% 73%,
-      72% 73%,
-      72% 70%,
-      77% 70%,
-      77% 75%,
-      8% 75%,
-      8% 42%,
-      4% 42%,
-      4% 61%,
-      17% 61%,
-      17% 12%,
-      26% 12%,
-      26% 63%,
-      73% 63%,
-      73% 43%,
-      90% 43%,
-      90% 67%,
-      50% 67%,
-      50% 41%,
-      42% 41%,
-      42% 46%,
-      50% 46%,
-      50% 84%,
-      96% 84%,
-      96% 78%,
-      49% 78%,
-      49% 25%,
-      63% 25%,
-      63% 14%
-    );
-  }
+        const Plus = [
+            [
+                [0,1,0],
+                [1,1,1],
+                [0,1,0]
+            ]
+        ];
 
-  90% {
-    clip-path: polygon(
-      0% 41%,
-      13% 41%,
-      13% 6%,
-      87% 6%,
-      87% 93%,
-      10% 93%,
-      10% 13%,
-      89% 13%,
-      89% 6%,
-      3% 6%,
-      3% 8%,
-      16% 8%,
-      16% 79%,
-      0% 79%,
-      0% 99%,
-      92% 99%,
-      92% 90%,
-      5% 90%,
-      5% 60%,
-      0% 60%,
-      0% 48%,
-      89% 48%,
-      89% 13%,
-      80% 13%,
-      80% 43%,
-      95% 43%,
-      95% 19%,
-      80% 19%,
-      80% 85%,
-      38% 85%,
-      38% 62%
-    );
-  }
+        const X = [
+            [
+                [1,0,1],
+                [0,1,0],
+                [1,0,1]
+            ]
+        ];
 
-  1%,
-  7%,
-  33%,
-  47%,
-  78%,
-  93% {
-    clip-path: none;
-  }
-}
+        // Array of Pieces and their Colors
+        const PIECES = [
+            [Z, 'red'],
+            [S, 'green'],
+            [T, 'yellow'],
+            [O, 'blue'],
+            [L, 'purple'],
+            [I, 'cyan'],
+            [J, 'orange'],
+            [U, 'pink'],
+            [Plus, 'lightgreen'],
+            [X, 'magenta']
+        ];
 
-.movement {
-  /* Normally this position would be absolute & on the layers, set to relative here so we can see it on the div */
-  position: relative;
-  animation: movement 8s step-end infinite;
-}
+        // Generate a Random Piece
+        function randomPiece() {
+            let r = Math.floor(Math.random() * PIECES.length);
+            return new Piece(PIECES[r][0], PIECES[r][1]);
+        }
 
-@keyframes movement {
-  0% {
-    top: 0px;
-    left: -20px;
-  }
+        // Piece Constructor
+        function Piece(tetromino, color) {
+            this.tetromino = tetromino;
+            this.color = color;
 
-  15% {
-    top: 10px;
-    left: 10px;
-  }
+            this.tetrominoN = 0; // Starting rotation index
+            this.activeTetromino = this.tetromino[this.tetrominoN];
 
-  60% {
-    top: 5px;
-    left: -10px;
-  }
+            // Initial Position
+            this.x = Math.floor(COL / 2) - Math.ceil(this.activeTetromino[0].length / 2);
+            this.y = -this.activeTetromino.length;
+        }
 
-  75% {
-    top: -5px;
-    left: 20px;
-  }
+        // Fill Cells with Color
+        Piece.prototype.fill = function(color) {
+            for (let r = 0; r < this.activeTetromino.length; r++) {
+                for (let c = 0; c < this.activeTetromino[r].length; c++) {
+                    if (this.activeTetromino[r][c]) {
+                        drawSquare(this.x + c, this.y + r, color);
+                    }
+                }
+            }
+        }
 
-  100% {
-    top: 10px;
-    left: 5px;
-  }
-}
+        // Draw the Piece
+        Piece.prototype.draw = function() {
+            this.fill(this.color);
+        }
 
-.opacity {
-  animation: opacity 5s step-end infinite;
-}
+        // Undraw the Piece
+        Piece.prototype.unDraw = function() {
+            this.fill(VACANT);
+        }
 
-@keyframes opacity {
-  0% {
-    opacity: 0.1;
-  }
+        // Move Down the Piece
+        Piece.prototype.moveDown = function() {
+            if (!this.collision(0, 1, this.activeTetromino)) {
+                this.unDraw();
+                this.y++;
+                this.draw();
+            } else {
+                this.lock();
+                piece = randomPiece();
+            }
+            dropStart = Date.now();
+        }
 
-  5% {
-    opacity: 0.7;
-  }
+        // Move Right the Piece
+        Piece.prototype.moveRight = function() {
+            if (!this.collision(1, 0, this.activeTetromino)) {
+                this.unDraw();
+                this.x++;
+                this.draw();
+            }
+        }
 
-  30% {
-    opacity: 0.4;
-  }
+        // Move Left the Piece
+        Piece.prototype.moveLeft = function() {
+            if (!this.collision(-1, 0, this.activeTetromino)) {
+                this.unDraw();
+                this.x--;
+                this.draw();
+            }
+        }
 
-  45% {
-    opacity: 0.6;
-  }
+        // Rotate the Piece
+        Piece.prototype.rotate = function() {
+            let nextPattern = this.tetromino[(this.tetrominoN + 1) % this.tetromino.length];
+            let kick = 0;
 
-  76% {
-    opacity: 0.4;
-  }
+            // Wall Kick
+            if (this.collision(0, 0, nextPattern)) {
+                if (this.x > COL / 2) {
+                    // Right wall
+                    kick = -1;
+                } else {
+                    // Left wall
+                    kick = 1;
+                }
+            }
 
-  90% {
-    opacity: 0.8;
-  }
+            if (!this.collision(kick, 0, nextPattern)) {
+                this.unDraw();
+                this.x += kick;
+                this.tetrominoN = (this.tetrominoN + 1) % this.tetromino.length;
+                this.activeTetromino = this.tetromino[this.tetrominoN];
+                this.draw();
+            }
+        }
 
-  1%,
-  7%,
-  33%,
-  47%,
-  78%,
-  93% {
-    opacity: 0;
-  }
-}
+        // Check for Collision
+        Piece.prototype.collision = function(x, y, piece) {
+            for (let r = 0; r < piece.length; r++) {
+                for (let c = 0; c < piece[r].length; c++) {
+                    if (!piece[r][c]) {
+                        continue;
+                    }
+                    let newX = this.x + c + x;
+                    let newY = this.y + r + y;
 
-.font {
-  animation: font 7s step-end infinite;
-}
+                    if (newX < 0 || newX >= COL || newY >= ROW) {
+                        return true;
+                    }
+                    if (newY < 0) {
+                        continue;
+                    }
+                    if (board[newY][newX] !== VACANT) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
-@keyframes font {
-  0% {
-    font-weight: 100;
-    color: #e0287d;
-    filter: blur(3px);
-  }
+        // Lock the Piece and Update the Board
+        Piece.prototype.lock = function() {
+            for (let r = 0; r < this.activeTetromino.length; r++) {
+                for (let c = 0; c < this.activeTetromino[r].length; c++) {
+                    if (!this.activeTetromino[r][c]) {
+                        continue;
+                    }
+                    if (this.y + r < 0) {
+                        alert("Game Over");
+                        gameOver = true;
+                        return;
+                    }
+                    board[this.y + r][this.x + c] = this.color;
+                }
+            }
+            // Remove Full Rows
+            for (let r = 0; r < ROW; r++) {
+                let isFull = true;
+                for (let c = 0; c < COL; c++) {
+                    isFull = isFull && (board[r][c] !== VACANT);
+                }
+                if (isFull) {
+                    // Remove the row and move everything down
+                    for (let y = r; y > 0; y--) {
+                        for (let c = 0; c < COL; c++) {
+                            board[y][c] = board[y - 1][c];
+                        }
+                    }
+                    // Fill the top row with VACANT
+                    for (let c = 0; c < COL; c++) {
+                        board[0][c] = VACANT;
+                    }
+                    // Update Score
+                    score += 10;
+                    scoreElement.innerHTML = score;
+                }
+            }
+            drawBoard();
+        }
 
-  20% {
-    font-weight: 500;
-    color: #e0287d;
-    filter: blur(0);
-    z-index: 30;
-  }
+        // Initialize Game Variables
+        let piece = randomPiece();
+        let score = 0;
+        let gameOver = false;
+        let paused = false;
 
-  50% {
-    font-weight: 300;
-    color: #e0287d;
-    filter: blur(2px);
-  }
+        // Control the Game Loop
+        let dropStart = Date.now();
+        let gameSpeed = 100; // Initial speed in milliseconds
 
-  60% {
-    font-weight: 700;
-    color: #e0287d;
-    filter: blur(0);
-    z-index: 30;
-  }
+        function drop() {
+            let now = Date.now();
+            let delta = now - dropStart;
+            if (delta > gameSpeed) {
+                piece.moveDown();
+                dropStart = Date.now();
+            }
+            if (!gameOver && !paused) {
+                requestAnimationFrame(drop);
+            }
+        }
 
-  90% {
-    font-weight: 500;
-    color: #e0287d;
-    filter: blur(6px);
-    z-index: 30;
-  }
-}
+        // Start the Game Loop
+        drop();
 
-.glitch span {
-  animation: paths 20s step-end infinite;
-}
+        // Handle Touch Controls for Mobile
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
 
-.glitch::before {
-  animation: paths 5s step-end infinite, opacity 100s step-end infinite,
-    font 18s step-end infinite, movement 20s step-end infinite;
-}
+        document.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, false);
 
-.glitch::after {
-  animation: paths 10s step-end infinite, opacity 50s step-end infinite,
-    font 17s step-end infinite, movement 18s step-end infinite;
-}
+        document.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe();
+        }, false);
 
-.hero-container {
-  position: fixed;
-  padding: 0px 0;
-  text-align: center;
-  left: 0;
-  top: 10%;
-  width: 100%;
-  height: 100%;
-}
+        function handleSwipe() {
+            if (gameOver || paused) return;
 
-.environment {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0.5;
-  filter: blur(5px);
-  background:transparent;
-  background-size: cover;
-}
+            let dx = touchEndX - touchStartX;
+            let dy = touchEndY - touchStartY;
 
+            if (Math.abs(dx) > Math.abs(dy)) {
+                // Horizontal swipe
+                if (dx > 0) {
+                    piece.moveRight();
+                } else {
+                    piece.moveLeft();
+                }
+            } else {
+                // Vertical swipe
+                if (dy > 0) {
+                    
+                    piece.moveDown();
+                } else {
+                    piece.rotate();
+                }
+            }
+            dropStart = Date.now();
+        }
 
-
-    </style>
+        // Handle Pause Button
+        pauseButton.addEventListener('click', function() {
+            if (gameOver) return;
+            paused = !paused;
+            if (!paused) {
+                drop();
+                pauseButton.innerText = 'Pause';
+            } else {
+                pauseButton.innerText = 'Resume';
+            }
+        });
+        // Initial Draw
+        drawBoard();
+        piece.draw();
+    </script>
 </body>
 </html>
