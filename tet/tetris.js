@@ -520,6 +520,33 @@ hammer.on('swipedown', () => {
 });
 hammer.on('tap', () => { if (!isGameOver && !isPaused) currentPiece.rotate(); });
 
+// Add soft drop for mobile control
+let touchStartY;
+gameBoard.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY;
+});
+
+gameBoard.addEventListener('touchmove', (e) => {
+    if (isGameOver || isPaused) return;
+    const touchEndY = e.touches[0].clientY;
+    const deltaY = touchEndY - touchStartY;
+    
+    if (deltaY > 10) { // Adjust this threshold as needed
+        if (!currentPiece.move(0, 1)) {
+            merge();
+            clearLines();
+            currentPiece = nextPiece;
+            nextPiece = createPiece();
+            drawNextPiece();
+            if (currentPiece.collision()) {
+                gameOver();
+            }
+        }
+        dropCounter = 0;
+        touchStartY = touchEndY;
+    }
+});
+
 // Game controller support
 window.addEventListener("gamepadconnected", function(e) {
     console.log("Gamepad connected at index %d: %s. %d buttons, %d axes.",
